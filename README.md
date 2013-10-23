@@ -1,4 +1,4 @@
-<h1>openSCAD</h1>
+<h1>openSCAD Designs</h1>
 
 This repository contains openSCAD source code for non-commercial use.
 

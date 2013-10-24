@@ -42,7 +42,7 @@ display_spool		= 0;		//Renders the spool to help visualise the dimensions and al
 spool_wall     		= 5;		//The thickness of the outer perimeter walls of the spool (the edge in contact with the bearings)
 spool_width    		= 160;	//The dimension of the spool from the centre of the flange in contact with the bearing to the centre of the opposite flange. Examples: Lybina 300m Spool = 160, Bilby 1Kg = 90
 spool_diameter 		= 204;	//The diameter of the outer edges of the spool body (not the filament section outer diameter). Examples: Lybina 300m Spool = 204, Bilby 1Kg = 160
-hole_diameter  		= 104;	//The diameter of the hole inside the spool 104,24. Examples: Lybina 300m Spool = 104, Bilby 1Kg = 32
+hole_diameter  		= 104;	//The diameter of the hole inside the spool. Examples: Lybina 300m Spool = 104, Bilby 1Kg = 32
 
 bearing_diameter  	= 22;	//The outer diameter of the bearing. Default 22 for standard 608 bearing
 bearing_thickness 	= 8;		//The side to side dimension of the bearing + allowed gap to wall e.g. 7(608 Bearing) + 0.5 gap either side  = 7 + 1 = 8

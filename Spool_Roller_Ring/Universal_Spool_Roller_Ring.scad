@@ -1,10 +1,10 @@
 /***********************************************************************************************************************************
-Universal Spool Roller Ring Designed by: Mike Thompson 8/8/2013
+Universal Spool Roller Ring Designed by: Mike Thompson 8/8/2013, http://www.thingiverse.com/mike_linus
 
 Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
 information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
 
-The spool roller is the ideal platform for simple, low cost, light, convenient and effective spool mounting.  It is easy to build with 
+The spool roller is the ideal platform for simple, low cost, light, convenient and effective filament spool mounting.  It is easy to build with 
 minimal hardware, requires minimal effort to mount and dismount spools and takes up minimal space.  This design was motivated by the
 basic simplicity and efficiency of the roller configuration while trying to address the inherent weaknesses in existing designs.  
 
@@ -37,31 +37,55 @@ a radial design. Some objects used in differencing have small values eg. 0.1 add
 Enter the values corresponding to your spool requirements in this section
 ***************************************************************************/
 
-display_spool		= 0;		//Renders the spool to help visualise the dimensions and alignment. Remember to set to 0 to hide for final compilation
+/* [Spool Dimensions] */
 
-spool_wall     		= 5;		//The thickness of the outer perimeter walls of the spool (the edge in contact with the bearings)
-spool_width    		= 160;	//The dimension of the spool from the centre of the flange in contact with the bearing to the centre of the opposite flange. Examples: Lybina 300m Spool = 160, Bilby 1Kg = 90
-spool_diameter 		= 204;	//The diameter of the outer edges of the spool body (not the filament section outer diameter). Examples: Lybina 300m Spool = 204, Bilby 1Kg = 160
-hole_diameter  		= 104;	//The diameter of the hole inside the spool. Examples: Lybina 300m Spool = 104, Bilby 1Kg = 32
+//The thickness of the outer perimeter walls of the spool (the edge in contact with the bearings)
+spool_wall     		= 5;		
+//The dimension of the spool from the centre of the flange in contact with the bearing to the centre of the opposite flange. Examples: Lybina 300m Spool = 160, Bilby 1Kg = 90
+spool_width    		= 90;
+//The diameter of the outer edges of the spool body (not the filament section outer diameter). Examples: Lybina 300m Spool = 204, Bilby 1Kg = 160	
+spool_diameter 		= 160;	
+//The diameter of the hole inside the spool. Examples: Lybina 300m Spool = 104, Bilby 1Kg = 32
+hole_diameter  		= 32;	
 
-bearing_diameter  	= 22;	//The outer diameter of the bearing. Default 22 for standard 608 bearing
-bearing_thickness 	= 8;		//The side to side dimension of the bearing + allowed gap to wall e.g. 7(608 Bearing) + 0.5 gap either side  = 7 + 1 = 8
-bolt_diameter     	= 8;		//This is the diameter of the bolt to be used to secure the bearings. Default 8 for standard M8 bolts
+/* [Bearing Dimensions] */
 
-retainer_include		= 1;     //Retainers are used to attach additional bearings to stop the spool from lifting or tipping off the base when very light or prone to movement. Set to 0 to exclude retainers (default 1)
-retainer_offset		= 5;		//offset from bearing line for retainer to accommodate spool centre extending beyond bearing line. Examples: Lybina 300m Spool = 5. Most spools = 0 (spool centre flush with rim)
+//The outer diameter of the bearing. Default 22 for standard 608 bearing
+bearing_diameter  	= 22;	
+//The side to side dimension of the bearing + allowed gap to wall e.g. 7(608 Bearing) + 0.5 gap either side  = 7 + 1 = 8
+bearing_thickness 	= 8;		
+//This is the diameter of the bolt to be used to secure the bearings. Default 8 for standard M8 bolts
+bolt_diameter     	= 8;		
+
+/* [Retainer Options] */
+
+//Generate side retainers to stop the spool from lifting or tipping off the base and to support alternate angle mounting with the use of a retainer rod
+retainer_include		= "include";//[include,exclude]
+//offset from bearing line for retainer to accommodate spool centre extending beyond bearing line. Examples: Lybina 300m Spool = 5. Most spools = 0 (spool centre flush with rim)
+retainer_offset		= 0;	
 
 /************************************************************************************************************
 The following values may be altered to increase/decrease stiffness and strength and tweak the ring dimensions
 *************************************************************************************************************/
 
-cross_brace_include	= 1;		//Cross bracing is recommended when flexing needs to be reduced such as mounting the holder on an angle (default 1)
-ring_cutouts			= 0;		//Number of cutouts in main ring. 0 will not create any cutouts (default 0)
-ring_width 			= 20;	//width of ring section. Recommend 20 or larger values if large base or if not mounting horizontally (default 20)
-ring_offset			= 10;		//Offset of ring radius from centre of bearing mount. Higher values reduce effective ring_radius (default 10)
-retainer_margin		= 5;		//margin for up/down adjustment of retainer bearing cutout (default 5)
-holder_wall        	= 4;		//The thickness of the bearing holder and retainer (default 4)
-holder_base_height 	= 4;		//The thickness of the base of the stand (default 4)
+/* [Advanced Options] */
+
+//Show Spool to visualise dimensions. Remember to hide for final compilation
+display_spool		= "hide";//[hide,show]		
+//Cross bracing is recommended when flexing needs to be reduced such as mounting on an angle
+cross_brace_include	= "include";//[include,exclude]		
+//Number of cutouts in main ring. Use 0 for maximum rigidity
+ring_cutouts			= 0;//[0:32]		
+//width of ring section. Recommend 20 or larger values if large base or if not mounting horizontally
+ring_width 			= 20;	
+//Offset of ring radius from centre of bearing mount. Higher values reduce effective ring_radius
+ring_offset			= 10;		
+//margin for up/down adjustment of retainer bearing cutout
+retainer_margin		= 5;		
+//The thickness of the bearing holder and retainer
+holder_wall        	= 4;		
+//The thickness of the base of the stand
+holder_base_height 	= 4;		
 
 /*********************************************************************************************************
 The following values should not be changed
@@ -213,6 +237,9 @@ module retainer() //creates bearing holders to trap the centre of the spool, pre
 	{
 		polygon(points=[[0,0],[((spool_diameter / 2)+(bearing_diameter/2))/2,0],[0,bearing_diameter/2]]);
 	}
+	//lateral brace particularly important when retainer not supported by the outer ring eg. tall and thin spool
+	translate([holder_wall/2,0,holder_base_height/2])cube([ring_width, ring_radius*2, holder_base_height], center=true);
+
 }
 
 module ring_cutouts() //creates holes in ring.  Use the ring_cutouts variable above to set the number of holes 
@@ -257,15 +284,26 @@ module base()  //builds the final object
 	{
 		ring();
 
- 		if (cross_brace_include!=0) //change the "cross_brace_include" value to 0 if no bracing required
+ 		if (cross_brace_include!="exclude") //change the "cross_brace_include" value to "exclude" if no bracing required
 		{
 			cross_brace();
 		}
 		
-		if (retainer_include!=0) //change the "retainer_include" value to 0 if no retainer required
+		if (retainer_include!="exclude") //change the "retainer_include" value to "exclude" if no retainer required
 		{
-			translate([spool_width/2+bearing_thickness/2+retainer_offset, 0, 0])retainer();
-			mirror([1,0,0])translate([spool_width/2+holder_wall+retainer_offset, 0, 0])retainer();	
+			difference()
+			{
+				union()
+				{
+					translate([spool_width/2+bearing_thickness/2+retainer_offset, 0, 0])retainer();
+					mirror([1,0,0])translate([spool_width/2+holder_wall+retainer_offset, 0, 0])retainer();	
+				}
+				difference() //trim lateral brace to fit inside ring
+				{
+					translate([0,0,-0.1])cylinder(r=ring_radius*2,h=holder_base_height+0.2);
+					translate([0,0,-0.1])cylinder(r=ring_radius-ring_offset,h=holder_base_height+0.2);
+				}	
+			}
 		}
 		
 		translate([spool_width/2, 
@@ -296,7 +334,7 @@ module base()  //builds the final object
 
 base();
 echo("Print bed size X/Y required =",ring_edge*2); //calculate build area - useful if large print area required that exceeds print bed.  Increase ring_offset to reduce ring radius and build area to required value. Note: reducing ring radius may reduce the support for the bearing holders.
-if (display_spool!=0)
+if (display_spool!="hide")
 {
-	spool(); 		//show spool position - change "display_spool" value to 0 before generating final compilation
+	spool(); 		//show spool position - change "display_spool" value to "hide" before generating final compilation
 }

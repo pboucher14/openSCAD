@@ -1,5 +1,6 @@
 /***********************************************************************************************************************************
 Universal Spool Roller Ring Designed by: Mike Thompson 8/8/2013, http://www.thingiverse.com/mike_linus
+Updated 9/2/2014 by Mike Thompson: amend minor error in retainer positioning
 
 Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
 information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB

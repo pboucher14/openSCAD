@@ -296,7 +296,7 @@ module base()  //builds the final object
 				union()
 				{
 					translate([spool_width/2+bearing_thickness/2+retainer_offset, 0, 0])retainer();
-					mirror([1,0,0])translate([spool_width/2+holder_wall+retainer_offset, 0, 0])retainer();	
+					mirror([1,0,0])translate([spool_width/2+bearing_thickness/2+retainer_offset, 0, 0])retainer();	
 				}
 				difference() //trim lateral brace to fit inside ring
 				{

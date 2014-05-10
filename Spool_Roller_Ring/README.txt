@@ -22,7 +22,7 @@ Key features:
 
 Instructions
 ------------
-Alter the values below for the required configuration. The minimal configuration without retainers requires 4 x M8 bolts and nuts and 4 x 608 bearings. If using retainers, use threaded rod between the retainers to secure 2 retainer bearings. See  http://www.thingiverse.com/thing:8796 for printable nuts and bolts. All parts are printable except the bearings. I have included an example to produce 8mm nuts, bolts and threaded rod that print well. Recommend using at least 40% fill. Note: The ring style base will require a slightly larger build platform than a radial design. Some objects used in differencing have small values eg. 0.1 added to fix display anomalies when using preview mode (f5) to render with OpenCSG, rather than the full CGAL render (f6). 
+Alter the values below for the required configuration. The minimal configuration without retainers requires 4 x M8 bolts and nuts and 4 x 608 bearings. If using retainers, use threaded rod between the retainers to secure 2 retainer bearings. See  http://www.thingiverse.com/thing:193647 for printable nuts and bolts. All parts are printable except the bearings. I have included an example to produce 8mm nuts, bolts and threaded rod that print well. Recommend using at least 40% fill. Note: The ring style base will require a slightly larger build platform than a radial design. Some objects used in differencing have small values eg. 0.1 added to fix display anomalies when using preview mode (f5) to render with OpenCSG, rather than the full CGAL render (f6). 
 
 Licensing
 ---------

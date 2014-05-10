@@ -17,7 +17,7 @@ Adjust the dimensions below to suit your requirements and separately generate th
 ************************************************************************************************************************************/
 
 /**************************************************************************
-Enter the values corresponding to your spool requirements in this section
+Enter the values corresponding to your requirements in this section
 ***************************************************************************/
 
 /* [General Options] */
@@ -94,7 +94,7 @@ internal_radius=enclosure_diameter/2;
 
 $fn=64;
 
-if (Component=="all") //display case and lid together (display only - set to case or lid to generate separate components)
+if (Component=="all") //'all' displays case and lid together (display only - set to case or lid to generate separate components)
 {
 	mirror([0,0,1])case();
 	translate([0,0,10])lid();

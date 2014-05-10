@@ -22,10 +22,8 @@ Enter the values corresponding to your spool requirements in this section
 
 /* [General Options] */
 
-//Show both halves to visualise completed set. Remember to set to "false" before compilation
-show = "all";//[case,lid,all (display only)]
-//Thickness of walls
-thickness=1.5;
+//Choose which component to generate. 'All' will show both halves to visualise the complete set. Remember to set to 'case' or 'lid' before compilation
+Component = "all";//[case,lid,all]
 //Number of cable entry/exit holes. Set to 0 if cable entry through base.
 number_cables=2;//[0:12]
 //Diameter of cable enterinmg or exiting enclosure
@@ -39,23 +37,25 @@ number_standoffs=2;
 //Diameter of the screw hole in the standoff.  Set to a value that the screw will grab snuggly.  The lid hole will be 1mm wider in diameter to allow the screw to pass through easily
 standoff_inner_diameter=2.5;
 
-//Central mounting hole
+/* [Mounting Holes] */
+
+//Central mounting hole in case
 mount_hole_centre="true";//[true,false]
 //Diameter of the central mounting hole. Note: The diameter can be changed to accommodate a cable entry point if required
 mount_hole_centre_diameter=3.5;
-//Top mounting hole
+//Top mounting hole in case
 mount_hole_top="false";//[true,false]
 //Diameter of the top mounting hole. Note: The diameter can be changed to accommodate a cable entry point if required
 mount_hole_top_diameter=3.5;
-//Bottom mounting hole
+//Bottom mounting hole in case
 mount_hole_bottom="false";//[true,false]
 //Diameter of the bottom mounting hole. Note: The diameter can be changed to accommodate a cable entry point if required
 mount_hole_bottom_diameter=3.5;
-//Left mounting hole
+//Left mounting hole in case
 mount_hole_left="false";//[true,false]
 //Diameter of the left mounting hole. Note: The diameter can be changed to accommodate a cable entry point if required
 mount_hole_left_diameter=3.5;
-//Right mounting hole
+//Right mounting hole in case
 mount_hole_right="false";//[true,false]
 //Diameter of the right mounting hole. Note: The diameter can be changed to accommodate a cable entry point if required
 mount_hole_right_diameter=3.5;
@@ -66,7 +66,8 @@ The following values can be be tweak defaults and adjust optional settings
 *************************************************************************************************************/
 
 /* [Advanced Options] */
-
+//Thickness of walls
+thickness=1.5;
 //thickness of inner wall lip of lid to lock in place
 lip_thickness=1.5;
 //Provides small gap between lip and inside of case to prevent grabbing
@@ -86,17 +87,21 @@ countersink_depth=1;
 The following should not be changed
 **********************************************************************************************************/
 
+
 internal_radius=enclosure_diameter/2;
+
+/////////////////
+
 $fn=64;
 
-if (show=="all") //display case and lid together (display only - set to case or lid to generate separate components)
+if (Component=="all") //display case and lid together (display only - set to case or lid to generate separate components)
 {
 	mirror([0,0,1])case();
 	translate([0,0,10])lid();
 } 
 else
 {
-	if (show=="case")
+	if (Component=="case")
 	{
 		mirror([0,0,1])case(); //build case and flip to print in correct orientation
 	}

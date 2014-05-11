@@ -26,7 +26,7 @@ Enter the values corresponding to your requirements in this section
 Component = "all";//[case,lid,all]
 //Number of cable entry/exit holes. Set to 0 if cable entry through base.
 number_cables=2;//[0:12]
-//Diameter of cable enterinmg or exiting enclosure
+//Diameter of cable entering or exiting enclosure
 cable_diameter=7;
 //Overall height (depth) of enclosure 
 height=30;
@@ -90,8 +90,7 @@ The following should not be changed
 
 internal_radius=enclosure_diameter/2;
 
-/////////////////
-
+//Curve resolution
 $fn=64;
 
 if (Component=="all") //'all' displays case and lid together (display only - set to case or lid to generate separate components)

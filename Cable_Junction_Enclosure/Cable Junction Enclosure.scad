@@ -117,7 +117,7 @@ module case() //generate the case
 		union()
 		{
 			casebase();
-			standoffs(standoff_inner_diameter);
+			standoffs(standoff_inner_diameter,standoff_angle_offset);
 		}
 		union() //
 		{
@@ -152,9 +152,9 @@ module lid() //generate the lid
 		union()
 		{
 			lidbase();
-			standoffs(standoff_inner_diameter+1);
+			standoffs(standoff_inner_diameter+1,standoff_angle_offset-180);
 		}	
-		lid_holes(standoff_inner_diameter+1);
+		lid_holes(standoff_inner_diameter+1,standoff_angle_offset-180);
 	}
 }
 
@@ -205,11 +205,11 @@ module lidbase()
 	}
 }	
 
-module lid_holes(inner_hole_diameter)
+module lid_holes(inner_hole_diameter, offset_angle)
 {
 	for(i=[1:number_standoffs])
 	{
-		rotate([0,0,standoff_angle_offset])translate([cos(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), sin(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), 0 ])
+		rotate([0,0,offset_angle])translate([cos(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), sin(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), 0 ])
 		union()
 		{
 			translate([0,0,(height/2)-thickness])cylinder(r=inner_hole_diameter/2,h=thickness);
@@ -221,11 +221,11 @@ module lid_holes(inner_hole_diameter)
 	}
 }
 
-module standoffs(inner_hole_diameter) //generates standoffs. No more than 4 recommended.
+module standoffs(inner_hole_diameter,offset_angle) //generates standoffs. No more than 4 recommended.
 {
 	for(i=[1:number_standoffs])
 	{
-		rotate([0,0,standoff_angle_offset])translate([cos(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), sin(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), 0 ])
+		rotate([0,0,offset_angle])translate([cos(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), sin(360/number_standoffs*i)*(internal_radius-(standoff_outer_diameter/2)-lip_thickness), 0 ])
 		difference()
 		{
 			translate([0,0,tolerance/2])cylinder(r=standoff_outer_diameter/2,h=(height/2)-(tolerance/2)); //tolerance used to ensure sufficent gap between standoffs for flush closure

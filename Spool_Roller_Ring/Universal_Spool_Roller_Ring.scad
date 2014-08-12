@@ -1,6 +1,6 @@
 /***********************************************************************************************************************************
 Universal Spool Roller Ring Designed by: Mike Thompson 8/8/2013, http://www.thingiverse.com/mike_linus
-Updated 9/2/2014 by Mike Thompson: amend minor error in retainer positioning
+V2 Updated 11/8/2014 by Mike Thompson: improved handling of cutouts when using retainers
 
 Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
 information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
@@ -302,7 +302,7 @@ module base()  //builds the final object
 				difference() //trim lateral brace to fit inside ring
 				{
 					translate([0,0,-0.1])cylinder(r=ring_radius*2,h=holder_base_height+0.2);
-					translate([0,0,-0.1])cylinder(r=ring_radius-ring_offset,h=holder_base_height+0.2);
+					translate([0,0,-0.1])cylinder(r=ring_edge-ring_width,h=holder_base_height+0.2);
 				}	
 			}
 		}

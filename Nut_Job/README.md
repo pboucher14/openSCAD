@@ -1,4 +1,6 @@
-'Nut Job' nut, bolt, washer and threaded rod factory by Mike Thompson 1/12/2013, Thingiverse: mike_linus
+'Nut Job' nut, bolt, washer and threaded rod factory
+====================================================
+by Mike Thompson 1/12/2013, Thingiverse: mike_linus
 8/12/2013 v2 - added socket head types
 
 This script generates nuts, bolts, washers and threaded rod using the library 

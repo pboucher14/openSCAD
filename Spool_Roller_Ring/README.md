@@ -1,8 +1,9 @@
+Universal Spool Roller Ring
+===========================
+Designed by: Mike Thompson 8/8/2013
+
 Description
 ------------
-
-Universal Spool Roller Ring Designed by: Mike Thompson 8/8/2013
-
 v2: Updated 11/8/2014 by Mike Thompson: improved handling of cutouts when using retainers
 
 The spool roller is the ideal platform for simple, low cost, light, convenient and effective spool mounting.  It is easy to build with minimal hardware, requires minimal effort to mount and dismount spools and takes up minimal space.  This design was motivated by the basic simplicity and efficiency of the roller configuration while trying to address the inherent weaknesses in existing designs.  
@@ -16,7 +17,8 @@ Some of the key issues with existing designs are:
 
 This design addresses these deficiencies by providing increased lateral stability in the base and the addition of retainers to prevent dislodgement, regardless of the spool weight or even base angle. By selecting appropriate values for improved stiffness and strength, the spool can be mounted at any angle, even inverted.
 
-Key features:
+Key features
+------------
 - Ring structure provides better stability with minimal filament and suffers less ABS print warping compared to straight edges
 - Retainers prevent spool dislodging when weight reduced and allow mounting at any angle
 - Inner flanges on bearing holders negate the need for washers on the base

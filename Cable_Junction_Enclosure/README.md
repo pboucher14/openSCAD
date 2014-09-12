@@ -1,5 +1,6 @@
-Customisable Cable Junction Enclosure v1.0 by Mike Thompson 8/5/2014
-====================================================================
+Customisable Cable Junction Enclosure v1.0
+==========================================
+by Mike Thompson 8/5/2014
 
 Licensing
 ---------

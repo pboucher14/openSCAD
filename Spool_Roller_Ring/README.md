@@ -1,11 +1,10 @@
 Universal Spool Roller Ring
 ===========================
 Designed by: Mike Thompson 8/8/2013
+v2: Updated 11/8/2014 by Mike Thompson: improved handling of cutouts when using retainers
 
 Description
 ------------
-v2: Updated 11/8/2014 by Mike Thompson: improved handling of cutouts when using retainers
-
 The spool roller is the ideal platform for simple, low cost, light, convenient and effective spool mounting.  It is easy to build with minimal hardware, requires minimal effort to mount and dismount spools and takes up minimal space.  This design was motivated by the basic simplicity and efficiency of the roller configuration while trying to address the inherent weaknesses in existing designs.  
 
 Some of the key issues with existing designs are:

@@ -4,7 +4,7 @@ V2 Updated 5/10/2014 by Mike Thompson: fully customisable version
 
 Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
 
-My Tray is a simple and effective customisable tray.  
+Couch Spud is a simple and effective customisable tray.  
 
 Key features include:
 - fully customisable
@@ -104,5 +104,7 @@ difference() {
 			translate([tray_width-corner_radius-drink_radius-drink_wall-margin,drink_radius+drink_wall+margin-corner_radius,tray_base])rotate(270)drink();
 		}	
 	}
-	translate([tray_width/2-corner_radius,tray_length*2/3,tray_base])rotate(180)write(writing,h=font_height,t=font_depth*2,center=true);
+	if(include_writing=="include") {	
+		translate([tray_width/2-corner_radius,tray_length*2/3,tray_base])rotate(180)write(writing,h=font_height,t=font_depth*2,center=true);
+	}
 }

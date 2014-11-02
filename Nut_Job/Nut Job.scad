@@ -1,5 +1,6 @@
 /* 'Nut Job' nut, bolt, washer and threaded rod factory by Mike Thompson 1/12/2013, Thingiverse: mike_linus
- * 8/12/2013 v2 - added socket head types
+ * v2 8/12/2013 - added socket head types
+ * v3 2/11/2014 - adjusted wing nut algorithm for better behaviour with unusual nut sizes and added ISO262 metric references
  *
  * This script generates nuts, bolts, washers and threaded rod using the library 
  * script: polyScrewThead.scad (modified/updated version polyScrewThread_r1.scad)
@@ -29,9 +30,9 @@ head_height  					= 5;
 socket_diameter     		= 5;		
 //Outer diameter of the thread
 thread_outer_diameter     		= 8;		
-//Thread step (2mm works well for most applications)
+//Thread step or Pitch (2mm works well for most applications ref. ISO262: M3=0.5,M4=0.7,M5=0.8,M6=1,M8=1.25,M10=1.5)
 thread_step    					= 2;
-//Step shape degrees	
+//Step shape degrees (45 degrees is optimised for most printers ref. ISO262: 30 degrees)
 step_shape_degrees 				= 45;	
 //Length of the threaded section
 thread_length  					= 25;	
@@ -51,15 +52,17 @@ nut_type	                      = "normal";//[normal,wingnut]
 //Distance between flats for the hex nut
 nut_diameter    					= 12;	
 //Height of the nut
-nut_height	  					= 6;	
+nut_height	  					=6;	
 //Outer diameter of the bolt thread to match (usually set about 1mm larger than bolt diameter to allow easy fit - adjust to personal preferences) 
 nut_thread_outer_diameter     	= 9;		
-//Thread step
+//Thread step or Pitch (2mm works well for most applications ref. ISO262: M3=0.5,M4=0.7,M5=0.8,M6=1,M8=1.25,M10=1.5)
 nut_thread_step    				= 2;
-//Step shape degrees	
+//Step shape degrees (45 degrees is optimised for most printers ref. ISO262: 30 degrees)
 nut_step_shape_degrees 			= 45;	
 //Resolution (lower values for higher resolution, but may slow rendering)
 nut_resolution    				= 0.5;
+
+wing_radius=nut_height;
 
 /* [Washer Options] */
 
@@ -91,15 +94,21 @@ if (type=="nut" && nut_type=="normal")
 //Wing Nut variation of hex nut. Cylinders added to each side of nut for easy turning - ideal for quick release applications
 if (type=="nut" && nut_type=="wingnut")
 {
+	rotate([0,0,30])hex_nut(nut_diameter,nut_height,nut_thread_step,nut_step_shape_degrees,nut_thread_outer_diameter,nut_resolution); //nut	
+	translate([(nut_diameter/2)+wing_radius-1,1.5,4])rotate([90,0,0])wing(); //attach wing
+	mirror(1,0,0)translate([(nut_diameter/2)+wing_radius-1,1.5,4])rotate([90,0,0])wing(); //attach wing
+}
+
+module wing()
+{
 	difference()
-  	{
+	{
+		cylinder(r=wing_radius,h=3,$fn=64); //cylinder
 		union()
 		{
-			hex_nut(nut_diameter,nut_height,nut_thread_step,nut_step_shape_degrees,nut_thread_outer_diameter,nut_resolution); //nut
-			translate([nut_thread_outer_diameter+2,1.5,4])rotate([90,0,0])cylinder(r=6,h=3,$fn=64); //attach cylinder
-			mirror(1,0,0)translate([nut_thread_outer_diameter+2,1.5,4])rotate([90,0,0])cylinder(r=6,h=3,$fn=64); //attach cylinder
+			translate([-wing_radius,-wing_radius-1,-0.5])cube([wing_radius*2,wing_radius/2,4]); //remove overhang so flush with base of nut		
+			rotate([0,0,90])translate([-wing_radius,wing_radius-1,-0.5])cube([wing_radius*2,wing_radius/2,4]); //remove overhangs so flush with side of nut		
 		}
-		translate([-30,-30,-3])cube([60,60,3]); //remove overhang so flush with base of nut
 	}
 }
 

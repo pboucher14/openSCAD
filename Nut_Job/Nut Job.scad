@@ -1,6 +1,11 @@
 /* 'Nut Job' nut, bolt, washer and threaded rod factory by Mike Thompson 1/12/2013, Thingiverse: mike_linus
+ * This software is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.
+ * Further information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
+ *
  * v2 8/12/2013 - added socket head types
  * v3 2/11/2014 - adjusted wing nut algorithm for better behaviour with unusual nut sizes and added ISO262 metric references
+ * v4 31/12/2014 - added optional texture to socket heads, added ability to change the number of facets for a hex head
+ * and adjusted wingnut base level on certain nut sizes
  *
  * This script generates nuts, bolts, washers and threaded rod using the library 
  * script: polyScrewThead.scad (modified/updated version polyScrewThread_r1.scad)
@@ -21,13 +26,15 @@ type								= "bolt";//[nut,bolt,rod,washer]
 /* [Bolt and Rod Options] */
 
 //Head type - Hex, Socket Cap, Button Socket Cap or Countersunk Socket Cap (ignored for Rod)
-head_type              		= "hex";//[hex,socket,button,countersunk]
+head_type              			= "hex";//[hex,socket,button,countersunk]
 //Distance between flats for the hex head or diameter for socket or button head (ignored for Rod)
 head_diameter    					= 12;	
 //Height of the head (ignored for Rod)
 head_height  					= 5;	
 //Distance between inner socket points for socket and button head types (ignored for Hex head and Rod)
-socket_diameter     		= 5;		
+socket_diameter     				= 5;		
+//Surface texture (socket head only)
+texture                       	= "exclude";//[include,exclude]
 //Outer diameter of the thread
 thread_outer_diameter     		= 8;		
 //Thread step or Pitch (2mm works well for most applications ref. ISO262: M3=0.5,M4=0.7,M5=0.8,M6=1,M8=1.25,M10=1.5)
@@ -44,11 +51,13 @@ countersink  					= 2;
 non_thread_length					= 0;	
 //Diameter for the non-threaded section (-1: Same as inner diameter of the thread, 0: Same as outer diameter of the thread, value: The given value)
 non_thread_diameter				= 0;	
+//Number of facets for hex head. Default is 6 for standard hex head
+facets                            = 6;
 
 /* [Nut Options] */
 
 //Type: Normal or WingNut
-nut_type	                      = "normal";//[normal,wingnut]
+nut_type	                      	= "normal";//[normal,wingnut]
 //Distance between flats for the hex nut
 nut_diameter    					= 12;	
 //Height of the nut
@@ -95,8 +104,8 @@ if (type=="nut" && nut_type=="normal")
 if (type=="nut" && nut_type=="wingnut")
 {
 	rotate([0,0,30])hex_nut(nut_diameter,nut_height,nut_thread_step,nut_step_shape_degrees,nut_thread_outer_diameter,nut_resolution); //nut	
-	translate([(nut_diameter/2)+wing_radius-1,1.5,4])rotate([90,0,0])wing(); //attach wing
-	mirror(1,0,0)translate([(nut_diameter/2)+wing_radius-1,1.5,4])rotate([90,0,0])wing(); //attach wing
+	translate([(nut_diameter/2)+wing_radius-1,1.5,wing_radius/2+1])rotate([90,0,0])wing(); //attach wing
+	mirror(1,0,0)translate([(nut_diameter/2)+wing_radius-1,1.5,wing_radius/2+1])rotate([90,0,0])wing(); //attach wing
 }
 
 module wing()
@@ -106,8 +115,8 @@ module wing()
 		cylinder(r=wing_radius,h=3,$fn=64); //cylinder
 		union()
 		{
-			translate([-wing_radius,-wing_radius-1,-0.5])cube([wing_radius*2,wing_radius/2,4]); //remove overhang so flush with base of nut		
-			rotate([0,0,90])translate([-wing_radius,wing_radius-1,-0.5])cube([wing_radius*2,wing_radius/2,4]); //remove overhangs so flush with side of nut		
+			translate([-wing_radius,-wing_radius-1,-0.5])cube([wing_radius*2,wing_radius/2,wing_radius*2]); //remove overhang so flush with base of nut		
+			rotate([0,0,90])translate([-wing_radius,wing_radius-1,-0.5])cube([wing_radius*2,wing_radius/2,wing_radius*2]); //remove overhangs so flush with side of nut		
 		}
 	}
 }
@@ -125,66 +134,73 @@ if (type=="washer")
 //Socket Head Bolt
 if (type=="bolt" && head_type!="hex")
 {
-	difference()
-	{
-		socket_screw(thread_outer_diameter,thread_step,step_shape_degrees,thread_length,resolution,countersink,head_diameter,head_height,non_thread_length,non_thread_diameter);
-	}
+	socket_screw(thread_outer_diameter,thread_step,step_shape_degrees,thread_length,resolution,countersink,head_diameter,head_height,non_thread_length,non_thread_diameter);
 }
 
 module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
 {
+	texture_points=40;
+	texture_offset=0.75;
+	texture_radius=0.5;
+
     ntr=od/2-(st/2)*cos(lf0)/sin(lf0);
 
 	difference()
 	{
-    	union()
-    	{
-        	if (head_type=="socket")
-			{
-				socket_head(hg,df);
-			}
+    		union()
+    		{
+        		if (head_type=="socket")
+				{
+					socket_head(hg,df);
+					if (texture=="include") //add texture to socket head. Adjust texture density and size using texture variables above 
+					{
+						for (i= [1:texture_points])
+						{
+							translate([cos(360/texture_points*i)*(head_diameter/2+texture_offset), sin(360/texture_points*i)*(head_diameter/2+texture_offset), 1 ])
+							rotate([0,0,360/texture_points*i])cylinder(r=texture_radius,h=head_height-2,$fn=3);
+						}
+					}
+				}
 			
-        	if (head_type=="button")
-			{
-				button_head(hg,df);				
-			}
+        		if (head_type=="button")
+				{
+					button_head(hg,df);				
+				}
 
-        	if (head_type=="countersunk")
-			{
-				countersunk_head(hg,df);				
-			}
+        		if (head_type=="countersunk")
+				{
+					countersunk_head(hg,df);				
+				}
 
-        	translate([0,0,hg])
-        	if ( ntl == 0 )
-        	{
-          	  cylinder(h=0.01, r=ntr, center=true);
-        	}
-        	else
-        	{
-            	if ( ntd == -1 )
-            	{
-                	cylinder(h=ntl+0.01, r=ntr, $fn=floor(od*PI/rs), center=false);
-            	}
-            	else if ( ntd == 0 )
-            	{
-                	union()
-                	{
-                    	cylinder(h=ntl-st/2,
-                             r=od/2, $fn=floor(od*PI/rs), center=false);
-
-                    	translate([0,0,ntl-st/2])
+        		translate([0,0,hg])
+        		if ( ntl == 0 )
+        		{
+          		cylinder(h=0.01, r=ntr, center=true);
+        		}
+        		else
+        		{
+            		if ( ntd == -1 )
+            		{
+                		cylinder(h=ntl+0.01, r=ntr, $fn=floor(od*PI/rs), center=false);
+            		}
+            		else if ( ntd == 0 )
+            		{
+                		union()
+                		{
+                    		cylinder(h=ntl-st/2,r=od/2, $fn=floor(od*PI/rs), center=false);
+                    		translate([0,0,ntl-st/2])
                     		cylinder(h=st/2,
                              r1=od/2, r2=ntr, 
                              $fn=floor(od*PI/rs), center=false);
-                	}
-            	}
-            	else
-            	{
-                	cylinder(h=ntl, r=ntd/2, $fn=ntd*PI/rs, center=false);
-            	}
-        	}
-        	translate([0,0,ntl+hg]) screw_thread(od,st,lf0,lt,rs,cs);
-    	}
+                		}
+            		}
+            		else
+            		{
+                		cylinder(h=ntl, r=ntd/2, $fn=ntd*PI/rs, center=false);
+            		}
+        		}
+        		translate([0,0,ntl+hg]) screw_thread(od,st,lf0,lt,rs,cs);
+    		}
 		cylinder(r=socket_diameter/2,h=3.75,$fn=6); //socket
 		translate([0,0,3.75])cylinder(r1=socket_diameter/2,r2=0,h=socket_diameter/2,$fn=6); //socket tapers at base to allow printing without support and improve socket grip
 	}
@@ -419,7 +435,7 @@ module full_thread(ttn,st,sn,zt,lfxy,or,ir)
                         [0,                  0,                  i*st+st            ]	])
         {
             polyhedron(points=pt,
-              		  triangles=[	[1,0,3],[1,3,6],[6,3,8],[1,6,4],
+              		  faces=[	[1,0,3],[1,3,6],[6,3,8],[1,6,4],
 											[0,1,2],[1,4,2],[2,4,5],[5,4,6],[5,6,7],[7,6,8],
 											[7,8,3],[0,2,3],[3,2,7],[7,2,5]	]);
         }
@@ -442,7 +458,7 @@ module hex_head(hg,df)
 
 	intersection()
 	{
-	   cylinder(h=hg, r=rd0, $fn=6, center=false);
+	   cylinder(h=hg, r=rd0, $fn=facets, center=false);
 
 		rotate_extrude(convexity=10, $fn=6*round(df*PI/6/0.5))
 		polygon([ [x0,y0],[x1,y0],[x2,y1],[x1,y2],[x0,y2] ]);

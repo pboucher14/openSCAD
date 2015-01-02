@@ -2,6 +2,9 @@
 Spring seat to maintain spring alignment and even pressure when compressed.
 Author: Mike Thompson (thingyverse: mike_linus)
 Date Last Modified: 16/03/2013
+Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
+information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
+
 Description: change the variable values to print an inside or outside seat of the required dimensions.  The inside seat is more compact for tighter spaces.  The outside version hides the base of the spring for but looks chunkier.
 ****************************************************************************/
 

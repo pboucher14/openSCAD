@@ -1,6 +1,7 @@
 /* 'Nut Job' nut, bolt, washer and threaded rod factory by Mike Thompson 1/12/2013, Thingiverse: mike_linus
- * This software is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.
- * Further information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
+ *
+ * Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
+ * information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
  *
  * v2 8/12/2013 - added socket head types
  * v3 2/11/2014 - adjusted wing nut algorithm for better behaviour with unusual nut sizes and added ISO262 metric references

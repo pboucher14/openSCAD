@@ -2,6 +2,8 @@
 Power Supply Terminal Cover for the power supply commonly used with the Bukobot and other 3d printers
 Author: Mike Thompson (thingiverse: mike_linus)
 Date Last Modified: 11/03/2013 4:19pm
+Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
+information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
 Description: simply change the cutout parameters to suit. Note: do not change length, height, depth and thickness parameters for the base unless you want to change the core dimensions.
 **************************************************************************************************/
 

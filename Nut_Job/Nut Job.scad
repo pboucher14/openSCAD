@@ -7,6 +7,7 @@
  * v3 2/11/2014 - adjusted wing nut algorithm for better behaviour with unusual nut sizes and added ISO262 metric references
  * v4 31/12/2014 - added optional texture to socket heads, added ability to change the number of facets for a hex head
  * and adjusted wingnut base level on certain nut sizes
+ * v5 10/1/2015 - improved texture handling
  *
  * This script generates nuts, bolts, washers and threaded rod using the library 
  * script: polyScrewThead.scad (modified/updated version polyScrewThread_r1.scad)
@@ -140,10 +141,6 @@ if (type=="bolt" && head_type!="hex")
 
 module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
 {
-	texture_points=40;
-	texture_offset=0.75;
-	texture_radius=0.5;
-
     ntr=od/2-(st/2)*cos(lf0)/sin(lf0);
 
 	difference()
@@ -153,14 +150,6 @@ module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
         		if (head_type=="socket")
 				{
 					socket_head(hg,df);
-					if (texture=="include") //add texture to socket head. Adjust texture density and size using texture variables above 
-					{
-						for (i= [1:texture_points])
-						{
-							translate([cos(360/texture_points*i)*(head_diameter/2+texture_offset), sin(360/texture_points*i)*(head_diameter/2+texture_offset), 1 ])
-							rotate([0,0,360/texture_points*i])cylinder(r=texture_radius,h=head_height-2,$fn=3);
-						}
-					}
 				}
 			
         		if (head_type=="button")
@@ -209,17 +198,30 @@ module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
 
 module socket_head(hg,df)
 {
+	texture_points=2*PI*(head_diameter/2);
+	texture_offset=head_diameter/18;
+	texture_radius=head_diameter/24;
+
 	rd0=df/2/sin(60);
 	x0=0;	x1=df/2;	x2=x1+hg/2;
 	y0=0;	y1=hg/2;	y2=hg;
 
 	intersection()
 	{
-	   cylinder(h=hg, r=rd0, $fn=60, center=false);
-
+	   	cylinder(h=hg, r=rd0, $fn=60, center=false);
 		rotate_extrude(convexity=10, $fn=6*round(df*PI/6/0.5))
 		polygon([ [x0,y0],[x1,y0],[x2,y1],[x1,y2],[x0,y2] ]);
 	}
+
+	if (texture=="include") //add texture to socket head. Adjust texture density and size using texture variables above 
+	{
+		for (i= [1:texture_points])
+		{
+			translate([cos(360/texture_points*i)*(head_diameter/2+texture_offset), sin(360/texture_points*i)*(head_diameter/2+texture_offset), 1 ])
+			rotate([0,0,360/texture_points*i])cylinder(r=texture_radius,h=head_height*0.6,$fn=3);
+		}
+	}
+
 }
 
 module button_head(hg,df)
@@ -230,8 +232,7 @@ module button_head(hg,df)
 
 	intersection()
 	{
-	   cylinder(h=hg, r1=socket_diameter/2 + 1, r2=rd0, $fn=60, center=false);
-
+	   	cylinder(h=hg, r1=socket_diameter/2 + 1, r2=rd0, $fn=60, center=false);
 		rotate_extrude(convexity=10, $fn=6*round(df*PI/6/0.5))
 		polygon([ [x0,y0],[x1,y0],[x2,y1],[x1,y2],[x0,y2] ]);
 	}

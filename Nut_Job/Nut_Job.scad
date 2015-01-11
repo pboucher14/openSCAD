@@ -1,13 +1,13 @@
 /* 'Nut Job' nut, bolt, washer and threaded rod factory by Mike Thompson 1/12/2013, Thingiverse: mike_linus
  *
- * Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.  Further 
- * information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
+ * Licensing: This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.
+ * Further information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
  *
  * v2 8/12/2013 - added socket head types
  * v3 2/11/2014 - adjusted wing nut algorithm for better behaviour with unusual nut sizes and added ISO262 metric references
  * v4 31/12/2014 - added optional texture to socket heads, added ability to change the number of facets for a hex head
  * and adjusted wingnut base level on certain nut sizes
- * v5 10/1/2015 - improved texture handling
+ * v5 11/1/2015 - added phillips and slot drive types and improved texture handling 
  *
  * This script generates nuts, bolts, washers and threaded rod using the library 
  * script: polyScrewThead.scad (modified/updated version polyScrewThread_r1.scad)
@@ -29,12 +29,18 @@ type								= "bolt";//[nut,bolt,rod,washer]
 
 //Head type - Hex, Socket Cap, Button Socket Cap or Countersunk Socket Cap (ignored for Rod)
 head_type              			= "hex";//[hex,socket,button,countersunk]
-//Distance between flats for the hex head or diameter for socket or button head (ignored for Rod)
+//Drive type - Socket, Phillips, Slot (ignored for Hex head type and Rod)
+drive_type              			= "socket";//[socket,phillips,slot]
+//Distance between flats for the hex head or diameter for socket or button head (ignored for Hex head type and Rod)
 head_diameter    					= 12;	
 //Height of the head (ignored for Rod)
 head_height  					= 5;	
-//Distance between inner socket points for socket and button head types (ignored for Hex head and Rod)
-socket_diameter     				= 5;		
+//Diameter of drive type (ignored for Hex head and Rod)
+drive_diameter					= 5;	
+//Width of slot aperture for phillips or slot drive types
+slot_width						= 1;
+//Depth of slot aperture for slot drive type
+slot_depth 						= 2;
 //Surface texture (socket head only)
 texture                       	= "exclude";//[include,exclude]
 //Outer diameter of the thread
@@ -139,9 +145,61 @@ if (type=="bolt" && head_type!="hex")
 	socket_screw(thread_outer_diameter,thread_step,step_shape_degrees,thread_length,resolution,countersink,head_diameter,head_height,non_thread_length,non_thread_diameter);
 }
 
+module phillips_base()
+{
+	linear_extrude(slot_width)polygon(points=[[0,0],[(drive_diameter-slot_width)/2,9/5*(drive_diameter-slot_width)/2],[(drive_diameter+slot_width)/2,9/5*(drive_diameter-slot_width)/2],[drive_diameter,0]]);
+	translate([(drive_diameter-slot_width)/2,0,(drive_diameter+slot_width)/2])rotate([0,90,0])linear_extrude(slot_width)polygon(points=[[0,0],[(drive_diameter-slot_width)/2,9/5*(drive_diameter-slot_width)/2],[(drive_diameter+slot_width)/2,9/5*(drive_diameter-slot_width)/2],[drive_diameter,0]]);
+}
+
+module phillips_fillet()
+{
+	union()
+	{
+		translate([-(drive_diameter-slot_width)/2-(slot_width/2),slot_width/2,0])rotate([90,0,0])phillips_base();
+		translate([0,0,9/5*(drive_diameter-slot_width)/2])union()
+		{
+			inner_curve();
+			rotate([0,0,90])inner_curve();
+			rotate([0,0,180])inner_curve();
+			rotate([0,0,270])inner_curve();
+		}
+	}
+}
+
+module inner_curve()
+{
+	translate([slot_width/2,-slot_width/2,0])rotate([0,90,0])linear_fillet(9/5*(drive_diameter-slot_width)/2,drive_diameter/10);
+}
+
+//basic 2d profile used for fillet shape
+module profile(radius)
+{
+  difference()
+  {
+    square(radius);
+    circle(r=radius);
+  }
+}
+
+//linear fillet for use along straight edges
+module linear_fillet(length,profile_radius)
+{
+	translate([0,-profile_radius,profile_radius])rotate([0,90,0])linear_extrude(height=length,convexity=10)profile(profile_radius);
+}
+
+module phillips_drive()
+{
+	intersection()
+	{
+		phillips_fillet();
+		cylinder(9/5*(drive_diameter-slot_width)/2,drive_diameter/2+(slot_width/2),slot_width/2);
+	}
+}
+
 module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
 {
     ntr=od/2-(st/2)*cos(lf0)/sin(lf0);
+	$fn=60;
 
 	difference()
 	{
@@ -191,8 +249,23 @@ module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
         		}
         		translate([0,0,ntl+hg]) screw_thread(od,st,lf0,lt,rs,cs);
     		}
-		cylinder(r=socket_diameter/2,h=3.75,$fn=6); //socket
-		translate([0,0,3.75])cylinder(r1=socket_diameter/2,r2=0,h=socket_diameter/2,$fn=6); //socket tapers at base to allow printing without support and improve socket grip
+		//create opening for specific drive type
+		if (drive_type=="socket")
+		{
+			cylinder(r=drive_diameter/2,h=3.75,$fn=6); //socket
+			translate([0,0,3.75])cylinder(r1=drive_diameter/2,r2=0,h=drive_diameter/2,$fn=6); //socket tapers at base to allow printing without bridging and improve socket grip
+		}
+		else
+		{
+			if (drive_type=="phillips")
+			{
+				translate([0,0,-0.001])phillips_drive();
+			}
+			else //slot
+			{
+				translate([-(drive_diameter)/2,slot_width/2,0])rotate([90,0,0])cube([drive_diameter,slot_depth,slot_width]);
+			}	
+		}
 	}
 }
 
@@ -232,7 +305,7 @@ module button_head(hg,df)
 
 	intersection()
 	{
-	   	cylinder(h=hg, r1=socket_diameter/2 + 1, r2=rd0, $fn=60, center=false);
+	   	cylinder(h=hg, r1=drive_diameter/2 + 1, r2=rd0, $fn=60, center=false);
 		rotate_extrude(convexity=10, $fn=6*round(df*PI/6/0.5))
 		polygon([ [x0,y0],[x1,y0],[x2,y1],[x1,y2],[x0,y2] ]);
 	}
@@ -437,7 +510,7 @@ module full_thread(ttn,st,sn,zt,lfxy,or,ir)
                         [0,                  0,                  i*st+st            ]	])
         {
             polyhedron(points=pt,
-              		  faces=[	[1,0,3],[1,3,6],[6,3,8],[1,6,4],
+              		  triangles=[	[1,0,3],[1,3,6],[6,3,8],[1,6,4],
 											[0,1,2],[1,4,2],[2,4,5],[5,4,6],[5,6,7],[7,6,8],
 											[7,8,3],[0,2,3],[3,2,7],[7,2,5]	]);
         }

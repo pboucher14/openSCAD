@@ -1,11 +1,12 @@
-/*Simple Fillet Library by Mike Thompson 3/1/2014, Thingiverse: mike_linus
+/*Simple Fillet Library v1.0 by Mike Thompson 3/1/2015, Thingiverse: mike_linus
+* v1.1 18/1/2015 added ability to change profile angle for ring fillet
 * This software is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Australia License.
 * Further information is available here - http://creativecommons.org/licenses/by-nc-sa/3.0/au/deed.en_GB
 *
 * This library generates basic fillets using the following functions:
 * - linear_fillet (straight edges)
 * - corner_fillet (90 degree corners)
-* - ring_fillet (cylinders)
+* - ring_fillet (cylinders - inside and outside)
 * - profile (generates the 2d profile used to set the fillet shape)
 * 
 * There are more advanced fillet libraries and functions available such as the excellent:
@@ -26,10 +27,10 @@ module profile(radius)
   }
 }
 
-//ring fillet for use around cylindrical objects
-module ring_fillet(ring_radius,profile_radius)
+//ring fillet for use around cylindrical objects. Set profile angle to 180 for outside fillet and 270 for inside.
+module ring_fillet(ring_radius,profile_radius,profile_angle)
 {
-	translate([0,0,profile_radius])rotate_extrude(convexity=10)translate([ring_radius+profile_radius,0,0])rotate([0,0,180])profile(profile_radius);
+	translate([0,0,profile_radius])rotate_extrude(convexity=10)translate([ring_radius+profile_radius,0,0])rotate([0,0,profile_angle])profile(profile_radius);
 }
 
 //linear fillet for use along straight edges
@@ -72,4 +73,4 @@ translate([10,40,2])rotate([0,0,180])corner_fillet(10.01,10);
 translate([10,10,2])rotate([0,0,270])corner_fillet(10.01,10);
 
 //ring
-translate([70,70,2])ring_fillet(15,10);
+translate([70,70,2])ring_fillet(15,10,180);

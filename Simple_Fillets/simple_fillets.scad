@@ -30,7 +30,7 @@ module profile(radius)
 //ring fillet for use around cylindrical objects. Set profile angle to 180 for outside fillet and 270 for inside.
 module ring_fillet(ring_radius,profile_radius,profile_angle)
 {
-	translate([0,0,profile_radius])rotate_extrude(convexity=10)translate([ring_radius+profile_radius,0,0])rotate([0,0,profile_angle])profile(profile_radius);
+	translate([0,0,profile_radius])rotate_extrude(convexity=10)translate([ring_radius,0,0])rotate([0,0,profile_angle])profile(profile_radius);
 }
 
 //linear fillet for use along straight edges
@@ -50,27 +50,39 @@ module corner_fillet(corner_radius,profile_radius)
 }
 
 /*EXAMPLE
-* Note - small changes in translated position have been made to ensure the object is manifold for stl generation
+* Note - small changes in translated position and radius have been made to ensure the object is 
+* manifold (touching at least two sides) for stl generation
 */
 
-//build basic structure for example
+//build basic structures for example
 color("LimeGreen")cube([95,95,2]);
-color("LimeGreen")translate([10,10,2])cube([30,30,50]);
-color("LimeGreen")translate([70,70,2])cylinder(r=15,h=50);
+color("LimeGreen")translate([10,55,2])cube([30,30,50]);
+
+difference() //create rounded top cylinder by subtracting fillet
+{
+	color("LimeGreen")translate([70,25,2])cylinder(r=15,h=50);
+	translate([70,25,52.001])rotate([180,0,0])ring_fillet(5.001,10,270);
+}
+
+difference()
+{
+	color("LimeGreen")translate([22.5,22.5,2])cylinder(r=20,h=10);
+	color("LimeGreen")translate([22.5,22.5,2])cylinder(r=19,h=11);
+}
 
 //add fillets
 //sides
-translate([9.99,9.99,1.99])linear_fillet(30,10);
-translate([9.99,9.99,1.99])linear_fillet(30,10);
-translate([39.99,10,1.99])rotate([0,0,90])linear_fillet(30,10);
-translate([39.99,39.99,1.99])rotate([0,0,180])linear_fillet(30,10);
-translate([9.99,39.99,1.99])rotate([0,0,270])linear_fillet(30,10);
+translate([10,55.001,1.999])linear_fillet(30,10);
+translate([39.999,55,1.999])rotate([0,0,90])linear_fillet(30,10);
+translate([40,84.999,1.999])rotate([0,0,180])linear_fillet(30,10);
+translate([10.001,85,1.999])rotate([0,0,270])linear_fillet(30,10);
 
 //corners
-translate([40,10,2])corner_fillet(10+0.01,10);
-translate([40,40,2])rotate([0,0,90])corner_fillet(10.01,10);
-translate([10,40,2])rotate([0,0,180])corner_fillet(10.01,10);
-translate([10,10,2])rotate([0,0,270])corner_fillet(10.01,10);
+translate([40,55,2])corner_fillet(10.001,10);
+translate([40,85,2])rotate([0,0,90])corner_fillet(10.001,10);
+translate([10,85,2])rotate([0,0,180])corner_fillet(10.001,10);
+translate([10,55,2])rotate([0,0,270])corner_fillet(10.001,10);
 
 //ring
-translate([70,70,2])ring_fillet(15,10,180);
+translate([70,25,2])ring_fillet(25,10,180); //outside
+translate([22.5,22.5,2])ring_fillet(9,10,270); //inside

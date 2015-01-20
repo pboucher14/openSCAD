@@ -86,6 +86,21 @@ translate([10,85,2])rotate([0,0,180])corner_fillet(10.001,10);
 translate([10,55,2])rotate([0,0,270])corner_fillet(10.001,10);
 
 /*************************
+* small hollow cube
+**************************/
+//create hollow cube
+difference()
+{
+	color("LimeGreen")translate([52.5,52.5,2])cube([40,40,10]);
+	color("LimeGreen")translate([53.5,53.5,2])cube([38,38,11]);
+}
+//add inside linear fillets
+translate([53,92,2])linear_fillet(39,10);
+translate([53,53,2])rotate([0,0,90])linear_fillet(39,10);
+translate([92,53,2])rotate([0,0,180])linear_fillet(39,10);
+translate([92,92,2])rotate([0,0,270])linear_fillet(39,10);
+
+/*************************
 * cylinder tower
 **************************/
 //create cylinder and subtract ring fillet from top
@@ -98,7 +113,7 @@ difference()
 translate([70,25,2])ring_fillet(25,10,180);
 
 /*************************
-* bowl
+* small hollow cylinder
 **************************/
 //create hollow cylinder
 difference()

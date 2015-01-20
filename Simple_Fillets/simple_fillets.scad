@@ -40,7 +40,7 @@ module linear_fillet(length,profile_radius)
 }
 
 //corner fillet for use on 90 degree corners
-module corner_fillet(corner_radius,profile_radius)
+module corner_fillet(corner_radius,profile_radius,profile_angle)
 {
 	intersection()
 	{
@@ -49,40 +49,62 @@ module corner_fillet(corner_radius,profile_radius)
 	}
 }
 
-/*EXAMPLE
+/************************************************************************************************
+* EXAMPLE
 * Note - small changes in translated position and radius have been made to ensure the object is 
 * manifold (touching at least two sides) for stl generation
-*/
+*************************************************************************************************/
 
-//build basic structures for example
+//base
 color("LimeGreen")cube([95,95,2]);
-color("LimeGreen")translate([10,55,2])cube([30,30,50]);
 
-difference() //create rounded top cylinder by subtracting fillet
-{
-	color("LimeGreen")translate([70,25,2])cylinder(r=15,h=50);
-	translate([70,25,52.001])rotate([180,0,0])ring_fillet(5.001,10,270);
-}
-
+/*************************
+* cube tower
+**************************/
+//create tower and subtract linear fillets from top
 difference()
 {
-	color("LimeGreen")translate([22.5,22.5,2])cylinder(r=20,h=10);
-	color("LimeGreen")translate([22.5,22.5,2])cylinder(r=19,h=11);
+	color("LimeGreen")translate([10,55,2])cube([30,30,50]);
+	//take away side fillets inverted and flipped
+	translate([0,0,52.001])mirror([0,0,1])union()
+	{	
+		translate([10,85.001,0])linear_fillet(30,10);
+		translate([9.999,55,0])rotate([0,0,90])linear_fillet(30,10);
+		translate([40,54.999,0])rotate([0,0,180])linear_fillet(30,10);
+		translate([40.001,85,0])rotate([0,0,270])linear_fillet(30,10);
+	}
 }
-
-//add fillets
-//sides
+//add side fillets to base
 translate([10,55.001,1.999])linear_fillet(30,10);
 translate([39.999,55,1.999])rotate([0,0,90])linear_fillet(30,10);
 translate([40,84.999,1.999])rotate([0,0,180])linear_fillet(30,10);
 translate([10.001,85,1.999])rotate([0,0,270])linear_fillet(30,10);
-
-//corners
+//add corner fillets to base
 translate([40,55,2])corner_fillet(10.001,10);
 translate([40,85,2])rotate([0,0,90])corner_fillet(10.001,10);
 translate([10,85,2])rotate([0,0,180])corner_fillet(10.001,10);
 translate([10,55,2])rotate([0,0,270])corner_fillet(10.001,10);
 
-//ring
-translate([70,25,2])ring_fillet(25,10,180); //outside
-translate([22.5,22.5,2])ring_fillet(9,10,270); //inside
+/*************************
+* cylinder tower
+**************************/
+//create cylinder and subtract ring fillet from top
+difference() 
+{
+	color("LimeGreen")translate([70,25,2])cylinder(r=15,h=50);
+	translate([70,25,52.001])rotate([180,0,0])ring_fillet(5.001,10,270);
+}
+//add ring fillet to base
+translate([70,25,2])ring_fillet(25,10,180);
+
+/*************************
+* bowl
+**************************/
+//create hollow cylinder
+difference()
+{
+	color("LimeGreen")translate([22.5,22.5,2])cylinder(r=20,h=10);
+	color("LimeGreen")translate([22.5,22.5,2])cylinder(r=19,h=11);
+}
+//add inside ring fillet
+translate([22.5,22.5,2])ring_fillet(9,10,270);

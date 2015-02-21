@@ -8,6 +8,7 @@
  * v4 31/12/2014 - added optional texture to socket heads, added ability to change the number of facets for a hex head
  * and adjusted wingnut base level on certain nut sizes
  * v5 11/1/2015 - added phillips and slot drive types and improved texture handling 
+ * v6 21/2/2015 - added wing ratio to wingnuts 
  *
  * This script generates nuts, bolts, washers and threaded rod using the library 
  * script: polyScrewThead.scad (modified/updated version polyScrewThread_r1.scad)
@@ -23,28 +24,28 @@
 
 /* [Component Type] */
 
-type								= "bolt";//[nut,bolt,rod,washer]
+type						= "bolt";//[nut,bolt,rod,washer]
 
 /* [Bolt and Rod Options] */
 
 //Head type - Hex, Socket Cap, Button Socket Cap or Countersunk Socket Cap (ignored for Rod)
-head_type              			= "hex";//[hex,socket,button,countersunk]
+head_type              			        = "hex";//[hex,socket,button,countersunk]
 //Drive type - Socket, Phillips, Slot (ignored for Hex head type and Rod)
 drive_type              			= "socket";//[socket,phillips,slot]
 //Distance between flats for the hex head or diameter for socket or button head (ignored for Rod)
-head_diameter    					= 12;	
+head_diameter    				= 12;	
 //Height of the head (ignored for Rod)
 head_height  					= 5;	
 //Diameter of drive type (ignored for Hex head and Rod)
 drive_diameter					= 5;	
 //Width of slot aperture for phillips or slot drive types
-slot_width						= 1;
+slot_width					= 1;
 //Depth of slot aperture for slot drive type
-slot_depth 						= 2;
+slot_depth 					= 2;
 //Surface texture (socket head only)
-texture                       	= "exclude";//[include,exclude]
+texture                                      	= "exclude";//[include,exclude]
 //Outer diameter of the thread
-thread_outer_diameter     		= 8;		
+thread_outer_diameter             		= 8;		
 //Thread step or Pitch (2mm works well for most applications ref. ISO262: M3=0.5,M4=0.7,M5=0.8,M6=1,M8=1.25,M10=1.5)
 thread_step    					= 2;
 //Step shape degrees (45 degrees is optimised for most printers ref. ISO262: 30 degrees)
@@ -56,30 +57,31 @@ resolution    					= 0.5;
 //Countersink in both ends
 countersink  					= 2;	
 //Length of the non-threaded section
-non_thread_length					= 0;	
+non_thread_length				= 0;	
 //Diameter for the non-threaded section (-1: Same as inner diameter of the thread, 0: Same as outer diameter of the thread, value: The given value)
 non_thread_diameter				= 0;	
 //Number of facets for hex head. Default is 6 for standard hex head
-facets                            = 6;
+facets                                          = 6;
 
 /* [Nut Options] */
 
 //Type: Normal or WingNut
-nut_type	                      	= "normal";//[normal,wingnut]
+nut_type	                      	        = "normal";//[normal,wingnut]
 //Distance between flats for the hex nut
-nut_diameter    					= 12;	
+nut_diameter    				= 12;	
 //Height of the nut
-nut_height	  					=6;	
+nut_height	  				= 6;	
 //Outer diameter of the bolt thread to match (usually set about 1mm larger than bolt diameter to allow easy fit - adjust to personal preferences) 
-nut_thread_outer_diameter     	= 9;		
+nut_thread_outer_diameter     	                = 9;		
 //Thread step or Pitch (2mm works well for most applications ref. ISO262: M3=0.5,M4=0.7,M5=0.8,M6=1,M8=1.25,M10=1.5)
 nut_thread_step    				= 2;
 //Step shape degrees (45 degrees is optimised for most printers ref. ISO262: 30 degrees)
-nut_step_shape_degrees 			= 45;	
+nut_step_shape_degrees 			        = 45;	
 //Resolution (lower values for higher resolution, but may slow rendering)
 nut_resolution    				= 0.5;
-
-wing_radius=nut_height;
+//Wing radius ratio.  The proportional radius of the wing on the wing nut compared to the nut height value (default = 1)
+wing_ratio                                      = 1;
+wing_radius=wing_ratio * nut_height;
 
 /* [Washer Options] */
 
@@ -88,7 +90,7 @@ inner_diameter					= 8;
 //Outer Diameter
 outer_diameter					= 14;
 //Thickness
-thickness						= 2;
+thickness					= 2;
 
 //Hex Bolt
 if (type=="bolt" && head_type=="hex")

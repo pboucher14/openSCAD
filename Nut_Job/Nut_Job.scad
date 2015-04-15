@@ -265,7 +265,7 @@ module socket_screw(od,st,lf0,lt,rs,cs,df,hg,ntl,ntd)
 			}
 			else //slot
 			{
-				translate([-(drive_diameter)/2,slot_width/2,0])rotate([90,0,0])cube([drive_diameter,slot_depth,slot_width]);
+				translate([-(drive_diameter)/2,slot_width/2,-0.001])rotate([90,0,0])cube([drive_diameter,slot_depth,slot_width]);
 			}	
 		}
 	}
